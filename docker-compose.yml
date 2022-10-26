@@ -1,0 +1,35 @@
+version: '3'
+services:
+  mysql:
+    image: mariadb:10.4
+    volumes:
+      - "./data/db:/var/lib/mysql"
+    # ports:
+      # - "3307:3306"
+    restart: always
+    #command: --default_authentication_plugin=mysql_native_password
+  app:
+    build: ./dockerfiles
+    depends_on:
+      - mysql
+    volumes:
+      - "./app:/var/www/app"
+      - "./dockerfiles/config/php/php-fpm.conf:/etc/php-fpm.conf"
+      - "./dockerfiles/config/php/www.conf:/etc/php-fpm.d/www.conf"
+      - "./dockerfiles/config/php/php.ini:/usr/local/etc/php/php.ini"
+      - "./dockerfiles/config/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini"
+  cron:
+    build: ./dockerfiles/cron
+    depends_on:
+      - app
+  nginx:
+    image: nginx:latest
+    depends_on:
+      - app
+      - mysql
+    volumes:
+      - "./app:/var/www/app"
+      - "./dockerfiles/config/nginx/default.conf:/etc/nginx/conf.d/default.conf"
+#    ports:
+#      - "8080:80"
+    restart: always
