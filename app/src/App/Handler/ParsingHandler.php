@@ -6,6 +6,7 @@ namespace App\Handler;
 
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 use Mezzio\Router;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -25,8 +26,8 @@ class ParsingHandler implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $result = $this->parser->parse(file_get_contents("some_file.txt"));
+        $result = $this->parser->parse("<div><span>Hello world</span></div>");
         
-        return new HtmlResponse($result);
+        return new JsonResponse($result);
     }
 }

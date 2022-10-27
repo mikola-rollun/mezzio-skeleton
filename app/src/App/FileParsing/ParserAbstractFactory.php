@@ -11,6 +11,8 @@ use App\Handler\ParsingHandler;
 
 class ParserAbstractFactory implements AbstractFactoryInterface
 {
+    public const PARSER_KEY = 'EXECUTE';
+
     private const CONFIG_KEY = 'FileParserAbstractFactoryParseable';
 
     private const DEFAULT_INTERFACE = ParserInterface::class;
@@ -19,6 +21,7 @@ class ParserAbstractFactory implements AbstractFactoryInterface
     {
         $config = $container->get('config');
 
+        //those ifs could be merged
 
         if (!isset($config[self::CONFIG_KEY])) {
             return false;
@@ -30,16 +33,24 @@ class ParserAbstractFactory implements AbstractFactoryInterface
             return false;
         }
 
-        return 
-            isset($servicesConfig[$requestedName]) 
-            && is_a($servicesConfig[$requestedName], self::DEFAULT_INTERFACE, true);
+        if (!isset($servicesConfig[$requestedName][self::PARSER_KEY])) {
+            return false;
+        }
+
+        if (!$container->has($servicesConfig[$requestedName][self::PARSER_KEY])) {
+            return false;
+        }
+
+        $parser = $container->get($servicesConfig[$requestedName][self::PARSER_KEY]);
+
+        return is_a($parser, self::DEFAULT_INTERFACE);
     }
 
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $config = $container->get('config');
 
-        $serviceConfig = $config[self::CONFIG_KEY][$requestedName];
+        $serviceConfig = $config[self::CONFIG_KEY][$requestedName][self::PARSER_KEY];
 
         $parser = $container->get($serviceConfig);
 

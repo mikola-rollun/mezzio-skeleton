@@ -13,9 +13,9 @@ return [
 
         ],
         'invokables' => [
-            // 'ParseXML' => ParseXML::class,
-            // 'ParseJson' => ParseJson::class,
-            // 'ParseYml' => ParseYml::class
+            'ParseXMLService' => ParseXML::class,
+            'ParseJsonService' => ParseJson::class,
+            'ParseYmlService' => ParseYml::class
         ],
         'factories' => [
 
@@ -25,8 +25,14 @@ return [
         ],
     ],
     'FileParserAbstractFactoryParseable' => [
-        'ParseXML' => ParseXML::class, 
-        'ParseJSON' => ParseJson::class, 
-        'ParseYML' => ParseYml::class
+        'ParseXML' => [
+            ParserAbstractFactory::PARSER_KEY => "ParseYmlService", 
+        ],
+        'ParseJSON' => [
+            ParserAbstractFactory::PARSER_KEY => "ParseJsonService", 
+        ],
+        'ParseYML' => [
+            ParserAbstractFactory::PARSER_KEY => "ParseYmlService"
+        ]
     ]
 ];
