@@ -41,4 +41,8 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->get('/', App\Handler\HomePageHandler::class, 'home');
     $app->get('/api/ping', App\Handler\PingHandler::class, 'api.ping');
     $app->get('/greetings', App\Handler\GreetingsHandler::class, 'greetings');
+
+    $app->get('/parseXML', 'ParseXML', 'parser.ParseXML');
+    $app->get('/parseYML', 'ParseYML', 'parser.ParseYML');
+    $app->get('/parseJSON', 'ParseJSON', 'parser.ParseJSON');
 };
